@@ -6,6 +6,8 @@ import com.voda.demo.dto.RegisterRequest;
 import com.voda.demo.entity.User;
 import com.voda.demo.repository.UserRepository;
 import com.voda.demo.security.JwtUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,13 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Tag(name = "Auth", description = "Đăng ký & đăng nhập, trả về JWT token")
 public class AuthController {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    // POST /api/auth/register
+    @Operation(summary = "Đăng ký tài khoản", description = "Tạo user mới và trả về JWT token")
     @PostMapping("/register")
     public AuthResponse register(@RequestBody RegisterRequest request) {
         User user = new User();
@@ -35,7 +38,7 @@ public class AuthController {
         return new AuthResponse(token);
     }
 
-    // POST /api/auth/login
+    @Operation(summary = "Đăng nhập", description = "Xác thực email/password, trả về JWT token")
     @PostMapping("/login")
     public AuthResponse login(@RequestBody LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
